@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Escape the Desert Endless Runner</title>
+  <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+  <script src="./gameManager.js" type="module">
+  </script>
+  <div class="container" id="container">
+    <button id="toggle-music" class="music-toggle">🔊</button>
+    <div class="ui">
+      <div class="score-layout">
+        <div class="score-text" id="score-text">
+          00000
+        </div>
+      </div>
+    </div>
+    <div class="ui">
+      <div class="game-over-layout" id="game-over">
+        <div class="game-over-text">
+          <h1>GAME OVER</h1>
+          <p>Press enter to restart</p>
+        </div>
+      </div>      
+    </div>
+    <div class="ui">
+      <div class="game-menu-layout" id="game-menu">
+        <div class="game-menu-window">
+          <h1>Escape the Desert</h1>
+          <p>Avoid obstacles using WAD or arrow keys</p>
+          <p class="start-text">Press enter to start</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <audio id="start-music" src="audio/startmenu.mp3" loop></audio>
+  <audio id="game-music" src="audio/chase.mp3" loop></audio>
+  <audio id="end-music" src="audio/gameover.mp3" loop></audio>
+</body>
+</html>
