@@ -161,7 +161,6 @@ class gameManager {
 
     this.camera_.position.set(-12, 5, 0);
     this.camera_.lookAt(8, 3, 0);
-
     const moonlight = new THREE.DirectionalLight(0xaaaaee, 0.05);
     moonlight.position.set(-30, 100, -10); 
     moonlight.castShadow = true;

@@ -20,6 +20,7 @@ export const player = (() => {
       this.swerveDuration_ = 1; 
       this.params_ = params;
       this.velocity_ = 0.0;
+      this.targetZ_ = 0.0;
       this.LoadModel_();
       this.InitInput_();
     }
@@ -32,15 +33,10 @@ export const player = (() => {
         texture.wrapS = THREE.RepeatWrapping;
         texture.wrapT = THREE.RepeatWrapping;
         texture.premultiplyAlpha = true;
-        // split image of jeep into 4x3 grid for each angle
-        texture.repeat.set(1 / 4, 1 / 3); 
-        texture.offset.x = 2 / 4;
-        texture.offset.y = 1 - 4 / 3;
-    
         const material = new THREE.SpriteMaterial({ map: texture, transparent: true});
         material.color.set(0x302f2f);
         const sprite = new THREE.Sprite(material);
-        sprite.scale.set(6, 4, 2);
+        sprite.scale.set(5, 3, 2);
         this.mesh_ = sprite;
         this.mesh_.position.set(0,0,0)
         this.params_.scene.add(this.mesh_);
@@ -92,103 +88,68 @@ export const player = (() => {
       }
     }
 
-    // updates player position based on user input
     Update(timeElapsed) {
-      // simulate car "jumping" on key up
+      // simulate car "jumping" on user input
       if (this.keys_.up && this.position_.y == 2.0 && !this.swerveInProgress_) {
         this.jumpInProgress_ = true;
         this.velocity_ = 30;
       }
       if (this.jumpInProgress_) {
         const acceleration = -75 * timeElapsed;
-
+    
         this.position_.y += timeElapsed * (this.velocity_ + acceleration * 0.5);
         this.headlight_.position.y += timeElapsed * (this.velocity_ + acceleration * 0.5);
         this.position_.y = Math.max(this.position_.y, 2.0);
         this.headlight_.position.y = Math.max(this.position_.y, 2.0);
         this.velocity_ += acceleration;
         this.velocity_ = Math.max(this.velocity_, -100);
-
+    
         if (this.mesh_) {
           this.mesh_.position.copy(this.position_);
           this.CheckCollisions_();
         }
-        if (this.position_.y == 2.0 && this.jumpInProgress_) {
+        if (this.position_.y <= 2.01 && this.jumpInProgress_) { 
+          this.position_.y = 2.0;
           this.jumpInProgress_ = false;
         }
       }
+      
+      this.swerveSpeed_ = 5.0;
 
-      // set sweve state based on user input
-      if (this.keys_.left && this.swerveState_ === 'idle' && !this.swerveInProgress_ && this.position_.z == 0 && !this.jumpInProgress_) {
+      // set target location based on user input
+      if (this.keys_.left && !this.jumpInProgress_ && this.position_.z > -10) {
         this.swerveState_ = 'swerveLeft';
-        this.swerveTimer_ = 0;
+        this.targetZ_ = Math.max(this.position_.z - 10, -10); 
         this.swerveInProgress_ = true;
-        this.swerveStepDone_ = false; 
-      }
-      if (this.keys_.right && this.swerveState_ === 'idle' && !this.swerveInProgress_ && this.position_.z == -10 && !this.jumpInProgress_) {
+      } else if (this.keys_.right && !this.jumpInProgress_ && this.position_.z < 0) {
         this.swerveState_ = 'swerveRight';
-        this.swerveTimer_ = 0;
+        this.targetZ_ = Math.min(this.position_.z + 10, 0); 
         this.swerveInProgress_ = true;
-        this.swerveStepDone_ = false; 
       }
     
-      if (this.swerveState_ !== 'idle') {
-        this.swerveTimer_ += timeElapsed;
-    
-        switch (this.swerveState_) {
-          case 'swerveLeft':
-            // update player, headlight, and camera position to veer left 
-            // movement 1: swerve left
-            if (!this.swerveStepDone_) {
-              this.position_.z -= 10;
-              this.LoadSwerveTexture('jeep.png', 1 / 4, 2 - 4 / 3);
-              this.params_.camera.position.set(-12,5,-10);
-              this.params_.camera.lookAt(8,3,-10)
-              this.headlight_.position.set(0, 2, -8);
-              this.headlight_.target.position.set(50, 2, -40);
-              this.swerveStepDone_ = true;
-            }
-            // movement 2: return to face stright forward
-            if (this.swerveTimer_ >= 0.4) {
-              this.swerveState_ = 'idle';
-              this.LoadSwerveTexture('jeep.png', 2 / 4, 1 - 4 / 3);
-              this.headlight_.position.set(0, 2, -10);
-              this.headlight_.target.position.set(50, 2, -10);
-              this.swerveTimer_ = 0;
-              this.swerveInProgress_ = false;
-              this.swerveStepDone_ = false;
-            }
-            break;
-     
-          case 'swerveRight':
-            // update player, headlight, and camera position to veer right 
-            // movement 1: swerve right
-            if (!this.swerveStepDone_) {
-              this.position_.z += 10;
-              console.log("RIGHT SWERVE");
-              this.LoadSwerveTexture('jeep.png', 3 / 4, 2 - 4 / 3);
-              this.params_.camera.position.set(-12,5,0);
-              this.params_.camera.lookAt(8,3,0)
-              this.headlight_.position.set(-3, 2, -5);
-              this.headlight_.target.position.set(50, 2, 30);
-              this.swerveStepDone_ = true;
-            }
-            // movement 2: return to face stright forward
-            if (this.swerveTimer_ >= 0.4) {
-              this.swerveState_ = 'idle';
-              this.LoadSwerveTexture('jeep.png', 2 / 4, 1 - 4 / 3);
-              this.headlight_.position.set(0, 2, 0);
-              this.headlight_.target.position.set(50, 2, 0);
-              this.swerveTimer_ = 0;
-              this.swerveInProgress_ = false;
-              this.swerveStepDone_ = false;
-            }
-            break;
-        }
+      // Check for completion of the swerve
+      if (this.swerveInProgress_ && Math.abs(this.position_.z - this.targetZ_) < 2) {
+        this.swerveState_ = 'idle';
+        this.swerveInProgress_ = false;
       }
     
+      // gradually swerve to target location
       this.position_.y = Math.max(this.position_.y, 2.0);
       if (this.mesh_) {
+        const zDiff = this.targetZ_ - this.position_.z;
+        if (Math.abs(zDiff) > 0.01) {
+          this.position_.z += zDiff * timeElapsed * this.swerveSpeed_;
+          this.params_.camera.position.z = this.position_.z;
+          this.params_.camera.lookAt(8, 3, this.position_.z);
+          this.headlight_.position.z = this.position_.z;
+          this.headlight_.target.position.set(50, 2, this.position_.z);
+        } else {
+          this.position_.z = this.targetZ_;
+          this.params_.camera.position.z = this.targetZ_;
+          this.params_.camera.lookAt(8, 3, this.targetZ_);
+          this.headlight_.position.z = this.targetZ_;
+          this.headlight_.target.position.set(50, 2, this.targetZ_);
+        }
         this.mesh_.position.copy(this.position_);
         this.CheckCollisions_();
       }
@@ -202,10 +163,6 @@ export const player = (() => {
         texture.wrapS = THREE.RepeatWrapping;
         texture.wrapT = THREE.RepeatWrapping;
         texture.premultiplyAlpha = true;
-        texture.repeat.set(1 / 4, 1 / 3);
-        texture.offset.x = x;
-        texture.offset.y = y;
-
         const material = new THREE.SpriteMaterial({ map: texture, transparent: true});
         material.color.set(0x302f2f);
         this.mesh_.material = material; 
