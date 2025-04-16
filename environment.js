@@ -154,8 +154,8 @@ export const environment = (() => {
       this.road.position.x -= timeElapsed * 50;
 
       // reuse road once a large portion goes out of view for infinite play 
-      if (this.road.position.x < -5000) {
-        this.road.position.x += 5000;
+      if (this.road.position.x < -500) {
+        this.road.position.x += 500;
       }
 
       for (let c of this.objs_) {
