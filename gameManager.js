@@ -15,6 +15,8 @@ import {environment} from './environment.js';
 
 class gameManager {
   constructor() {
+    this.speed = 25;
+    this.highscore = 0;
     this.Initialize_();
     this.maxAnisotrophy = null;
     this._gameStarted = false;
@@ -79,7 +81,7 @@ class gameManager {
     this.scene_.add(ground);
 
     // intialize player, obstacles, and environment
-    this.obstacle_ = new obstacle.ObstacleManager({scene: this.scene_});
+    this.obstacle_ = new obstacle.ObstacleManager({scene: this.scene_, gameManager: this});
     this.player_ = new player.Player({scene: this.scene_, obstacle: this.obstacle_, camera: this.camera_});
     this.background_ = new environment.Environment({scene: this.scene_, maxAnisotrophy: this.maxAnisotrophy});
 
@@ -167,7 +169,7 @@ class gameManager {
     this.scene_.add(moonlight);
   
     this.maxAnisotrophy = this.threejs_.capabilities.getMaxAnisotropy();
-    this.obstacle_ = new obstacle.ObstacleManager({scene: this.scene_});
+    this.obstacle_ = new obstacle.ObstacleManager({scene: this.scene_, gameManager: this});
     this.player_ = new player.Player({scene: this.scene_, obstacle: this.obstacle_, camera: this.camera_});
     this.background_ = new environment.Environment({scene: this.scene_, maxAnisotrophy: this.maxAnisotrophy});
   

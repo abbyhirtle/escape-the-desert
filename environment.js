@@ -82,11 +82,11 @@ export const environment = (() => {
     }
 
     // update location of environment objects to simulate player movement
-    Update(timeElapsed) {
+    Update(timeElapsed, speed) {
       if (!this.mesh_) {
         return;
       }
-      this.position_.x -= timeElapsed * 50;
+      this.position_.x -= timeElapsed * speed;
       // reuse object once it goes out of view
       if (this.position_.x < -100) {
         this.position_.x = Math.random() * (3000 - 2000) + 2000;
@@ -116,7 +116,7 @@ export const environment = (() => {
     constructor(params) {
       this.params_ = params;
       this.objs_ = [];
-
+      this.speed_ = 35;
       this.CreateRoad_();
       this.SpawnObjs_();
     }
@@ -151,15 +151,20 @@ export const environment = (() => {
 
     // update location of road to simulate player movement
     Update(timeElapsed) {
-      this.road.position.x -= timeElapsed * 50;
-
-      // reuse road once a large portion goes out of view for infinite play 
-      if (this.road.position.x < -500) {
-        this.road.position.x += 500;
-      }
+      this.road.position.x -= timeElapsed * this.speed_;
 
       for (let c of this.objs_) {
-        c.Update(timeElapsed);
+        c.Update(timeElapsed, this.speed_);
+      }
+
+      // reuse road once a large portion goes out of view for infinite play 
+      if (this.road.position.x < -100) {
+        this.road.position.x += 100;
+      }
+
+      // update speed
+      if (this.speed_ < 100 && this.road.position.x % 20 == 0){
+        this.speed_ += 2;
       }
     }
   }

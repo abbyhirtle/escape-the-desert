@@ -62,7 +62,10 @@ body {
 }
 
 .score-text {
-  font-size: 3em;
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  font-size: 2em;
   color: white;
   padding: 2em;
   text-shadow: 5px 5px black;
@@ -73,6 +76,16 @@ body {
   flex-direction: row;
   justify-content: flex-end;
   align-items: flex-end;
+}
+
+.highscore-text{
+  position: fixed;
+  top: 0px;
+  right: 220px;
+  font-size: 2em;
+  color: white;
+  padding: 2em;
+  text-shadow: 5px 5px black; 
 }
 
 .game-menu-layout {
