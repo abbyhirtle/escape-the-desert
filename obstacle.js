@@ -57,10 +57,9 @@ export const obstacle = (() => {
     constructor(params) {
       this.objects_ = [];
       this.unused_ = [];
-      this.speed_ = 35;
-      this.barrierProbability_ = 0.0;
       this.params_ = params;
       this.score_ = 0.0;
+      this.speed_ = 35;
       this.scoreText_ = '00000';
       this.separationDistance_ = MIN_SEPARATION_DISTANCE;
     }
@@ -167,6 +166,7 @@ export const obstacle = (() => {
       this.RandomSpawn_();
       this.UpdateColliders_(timeElapsed);
       this.UpdateScore_(timeElapsed);
+      this.UpdateSpeed_();
     }
 
     // updates score and displays in game window
@@ -188,17 +188,29 @@ export const obstacle = (() => {
         const highScoreText = Math.round(this.params_.gameManager.highscore).toLocaleString(
             'en-US', {minimumIntegerDigits: 5, useGrouping: false});
         document.getElementById('highscore-text').innerText = `HI ${highScoreText}`;
-  }
+      }
+    }
+
+    UpdateSpeed_(){
+      const maxScore = 1000;
+      const minSpeed = 35;
+      const maxSpeed = 100;
+      const minProb = 0.0015;
+      const maxProb = 0.1;
+
+      const t = Math.min(this.score_ / maxScore, 1);
+
+      this.speed_ = minSpeed + (maxSpeed - minSpeed) * t;
+      this.barrierProbability_ = minProb + (maxProb - minProb) * t;
+      
+      document.getElementById('speed-text').innerText = `${Math.ceil(this.speed_.toFixed(1))}`;
     }
 
     // checks for collision between the player and an obstacle
     UpdateColliders_(timeElapsed) {
       const invisible = [];
       const visible = [];
-      if (Math.floor(this.score_) % 75 == 0 && this.speed_ < 100){
-        this.speed_ += 1;
-        this.barrierProbability_ += 0.0015
-      }
+
       for (let obj of this.objects_) {
         obj.position.x -= timeElapsed * this.speed_;
 

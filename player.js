@@ -62,7 +62,7 @@ export const player = (() => {
     
     // checks for user input from arrow keys
     OnKeyChange_(isDown, event) {
-      if (event.code == 'ArrowUp' || event.code == 'KeyW') {
+      if (event.code == 'ArrowUp' || event.code == 'KeyW' || event.code == 'Space') {
         this.keys_.up = isDown;
       }
       if (event.code == 'ArrowLeft' || event.code == 'KeyA') {

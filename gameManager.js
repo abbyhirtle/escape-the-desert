@@ -15,7 +15,6 @@ import {environment} from './environment.js';
 
 class gameManager {
   constructor() {
-    this.speed = 25;
     this.highscore = 0;
     this.Initialize_();
     this.maxAnisotrophy = null;
