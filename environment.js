@@ -112,17 +112,65 @@ export const environment = (() => {
 
   };
 
+  // handles creation of highway road sign that displays game controls
+  class InstructionSign {
+    constructor(params, textureName, position) {
+      this.params_ = params;
+      this.position_ = new THREE.Vector3(...position);
+      this.textureName_ = textureName;
+      this.sprite_ = null;
+      this.LoadTexture_();
+    }
+
+    LoadTexture_() {
+      // load road sign and apply material to sprite
+      const loader = new THREE.TextureLoader();
+      loader.setPath('./textures/');
+      loader.load(this.textureName_, (texture) => {
+        texture.encoding = THREE.sRGBEncoding;
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+        texture.premultiplyAlpha = true;
+
+        const material = new THREE.SpriteMaterial({ map: texture, transparent: true });
+        material.color.set(0x302f2f);
+        const sprite = new THREE.Sprite(material);
+        sprite.scale.set(45, 27, 1);
+        sprite.position.copy(this.position_);
+
+        this.sprite_ = sprite;
+        this.params_.scene.add(this.sprite_);
+      });
+    }
+
+    Update(timeElapsed, speed) {
+      if (!this.sprite_) return;
+
+      this.position_.x -= timeElapsed * speed;
+
+      if (this.position_.x < -100) {
+        // remove from scene once it passes the screen
+        this.params_.scene.remove(this.sprite_);
+        this.sprite_ = null;
+      } else {
+        this.sprite_.position.copy(this.position_);
+      }
+    }
+  }
+
   class Environment {
     constructor(params) {
       this.params_ = params;
       this.objs_ = [];
       this.speed_ = 35;
-      this.CreateRoad_();
+      this.instructionSigns_ = [];
+      this.SpawnRoad_();
       this.SpawnObjs_();
+      this.SpawnSigns_();
     }
 
-    // create road for player to ride on
-    CreateRoad_() {
+    // create road for player to drive on
+    SpawnRoad_() {
       const loader = new THREE.TextureLoader();
       const roadTexture = loader.load('./textures/road.jpg');
       roadTexture.wrapS = roadTexture.wrapT = THREE.RepeatWrapping;
@@ -136,8 +184,15 @@ export const environment = (() => {
       this.road.rotation.x = -Math.PI / 2;
       this.road.rotation.z = Math.PI / 2;
       this.road.receiveShadow = true;
-  
+
       this.params_.scene.add(this.road);
+    }
+
+    SpawnSigns_(){
+      const sign1 = new InstructionSign(this.params_, 'sign1.png', [100, 8, -5]);
+      const sign2 = new InstructionSign(this.params_, 'sign2.png', [200, 8, -5]);
+      this.instructionSigns_.push(sign1);
+      this.instructionSigns_.push(sign2);
     }
 
     // places 75 objects across scene
@@ -155,6 +210,10 @@ export const environment = (() => {
 
       for (let c of this.objs_) {
         c.Update(timeElapsed, this.speed_);
+      }
+
+      for (let sign of this.instructionSigns_) {
+        sign.Update(timeElapsed, this.speed_);
       }
 
       // reuse road once a large portion goes out of view for infinite play 

@@ -9,7 +9,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.124/build/three.mod
 
 export const obstacle = (() => {
 
-  const START_POS = 100;
+  const START_POS = 250;
   const MIN_SEPARATION_DISTANCE = 20;
 
   class Obstacle {
@@ -101,13 +101,15 @@ export const obstacle = (() => {
             }
           };
 
-      obj.quaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.random() * Math.PI * 2.0);
-      obj.position.x = START_POS + offset;
-      obj.position.y = 1.3;
-      obj.position.z = -5;
+          obj.quaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.random() * Math.PI * 2.0);
+          obj.position.x = START_POS + offset;
+          obj.position.y = 1.3;
+          obj.position.z = -5;
 
-      this.objects_.push(obj);
-    });
+          this.objects_.push(obj);
+        });
+
+        this.separationDistance_ = 60;
       }
         else{
         if (this.unused_.length > 0) {
@@ -143,6 +145,8 @@ export const obstacle = (() => {
 
       // randomly select left or right side of road to place obstacle
       if (Math.abs(START_POS - closest) > this.separationDistance_) {
+        // randomly generate next separation distance
+        this.separationDistance_ = Math.random() * ((MIN_SEPARATION_DISTANCE * 2) - MIN_SEPARATION_DISTANCE) + MIN_SEPARATION_DISTANCE;
         const selector = Math.random()
         if (selector < 0.5){
           const scaleIndex = Math.round(Math.random() * 1);
@@ -156,8 +160,6 @@ export const obstacle = (() => {
           const scale = scales[scaleIndex];
           this.SpawnObj_(scale, scale, -10); 
         }
-        // randomly generate next separation distance
-        this.separationDistance_ = Math.random() * ((MIN_SEPARATION_DISTANCE * 2) - MIN_SEPARATION_DISTANCE) + MIN_SEPARATION_DISTANCE;
       }
     }
 
@@ -191,6 +193,7 @@ export const obstacle = (() => {
       }
     }
 
+    // slowly increases speed and barrier probability until it maxes out at 1000 points 
     UpdateSpeed_(){
       const maxScore = 1000;
       const minSpeed = 35;
