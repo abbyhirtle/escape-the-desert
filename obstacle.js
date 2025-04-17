@@ -62,6 +62,7 @@ export const obstacle = (() => {
       this.speed_ = 35;
       this.scoreText_ = '00000';
       this.separationDistance_ = MIN_SEPARATION_DISTANCE;
+      this.barrierSep_ = 50;
     }
 
     GetColliders() {
@@ -109,7 +110,7 @@ export const obstacle = (() => {
           this.objects_.push(obj);
         });
 
-        this.separationDistance_ = 60;
+        this.separationDistance_ = this.barrierSep_;
       }
         else{
         if (this.unused_.length > 0) {
@@ -200,12 +201,13 @@ export const obstacle = (() => {
       const maxSpeed = 100;
       const minProb = 0.0015;
       const maxProb = 0.1;
-
+      const minBarGap = 50;
+      const maxBarGap = 70;
       const t = Math.min(this.score_ / maxScore, 1);
 
       this.speed_ = minSpeed + (maxSpeed - minSpeed) * t;
       this.barrierProbability_ = minProb + (maxProb - minProb) * t;
-      
+      this.barrierSep_ = minBarGap + (maxBarGap - minBarGap) * t;
       document.getElementById('speed-text').innerText = `${Math.ceil(this.speed_.toFixed(1))}`;
     }
 

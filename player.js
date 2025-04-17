@@ -29,14 +29,14 @@ export const player = (() => {
     LoadModel_() {
       const loader = new THREE.TextureLoader();
       loader.setPath('./textures/');
-      loader.load('jeep.png', (texture) => {
+      loader.load('fiat.png', (texture) => {
         texture.wrapS = THREE.RepeatWrapping;
         texture.wrapT = THREE.RepeatWrapping;
         texture.premultiplyAlpha = true;
         const material = new THREE.SpriteMaterial({ map: texture, transparent: true});
         material.color.set(0x302f2f);
         const sprite = new THREE.Sprite(material);
-        sprite.scale.set(5, 3, 2);
+        sprite.scale.set(4, 4, 1);
         this.mesh_ = sprite;
         this.mesh_.position.set(0,0,0)
         this.params_.scene.add(this.mesh_);
