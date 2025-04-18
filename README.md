@@ -23,7 +23,8 @@ Start the Game:
 *Press space to begin.*
 
 Avoid Obstacles:  
-*Use WAD or the arrow keys to jump or dodge obstacles in the road*
+*Use AD or the arrow keys to dodge obstacles*  
+*Use W, space bar, or the up arrow to jump over obstacles*  
 
 Restart After a Crash:  
 *Click the screen to restart and try again.*

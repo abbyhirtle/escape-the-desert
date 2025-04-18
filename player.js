@@ -25,7 +25,7 @@ export const player = (() => {
       this.InitInput_();
     }
     
-    // creates a jeep object by applying an image of a jeep to a sprite
+    // creates a car object by applying an image of a car to a sprite
     LoadModel_() {
       const loader = new THREE.TextureLoader();
       loader.setPath('./textures/');
