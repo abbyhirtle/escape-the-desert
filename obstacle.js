@@ -15,7 +15,6 @@ export const obstacle = (() => {
   class Obstacle {
     constructor(params) {
       this.position = new THREE.Vector3();
-      this.quaternion = new THREE.Quaternion();
       this.scale = 1.0;
       this.collider = new THREE.Box3();
       this.modelType = null;
@@ -47,8 +46,9 @@ export const obstacle = (() => {
         return;
       }
       this.mesh.position.copy(this.position);
-      this.mesh.quaternion.copy(this.quaternion);
-      this.collider.setFromObject(this.mesh);
+      const scale = new THREE.Vector3(1.8,1.5,2.8);
+      this.collider.min.copy(this.mesh.position).sub(scale);
+      this.collider.max.copy(this.mesh.position).add(scale);
     }
   }
 
@@ -91,18 +91,16 @@ export const obstacle = (() => {
           obj = {
             mesh: sprite,
             position: new THREE.Vector3(),
-            quaternion: new THREE.Quaternion(),
             scale: scale * 0.01,
             modelType: 'barrier',
             collider: new THREE.Box3(),
             Update: function () {
               this.mesh.position.copy(this.position);
-              this.mesh.quaternion.copy(this.quaternion);
-              this.collider.setFromObject(this.mesh);
+              const scale = new THREE.Vector3(1.5,1.5,10);
+              this.collider.min.copy(this.mesh.position).sub(scale);
+              this.collider.max.copy(this.mesh.position).add(scale);
             }
           };
-
-          obj.quaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.random() * Math.PI * 2.0);
           obj.position.x = START_POS + offset;
           obj.position.y = 1.3;
           obj.position.z = -5;
@@ -120,7 +118,6 @@ export const obstacle = (() => {
           obj = new Obstacle(this.params_);
         }
 
-        obj.quaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.random() * Math.PI * 2.0);
         obj.position.x = START_POS + offset;
         if (obj.modelType == 'barrier') {
           obj.position.y = 1.3;

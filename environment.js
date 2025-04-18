@@ -13,7 +13,6 @@ export const environment = (() => {
     constructor(params) {
       this.params_ = params;
       this.position_ = new THREE.Vector3();
-      this.quaternion_ = new THREE.Quaternion();
       this.scale_ = 1.0;
       this.mesh_ = null;
 
@@ -92,7 +91,6 @@ export const environment = (() => {
         this.position_.x = Math.random() * (3000 - 2000) + 2000;
       }
       this.mesh_.position.copy(this.position_);
-      this.mesh_.quaternion.copy(this.quaternion_);
       this.mesh_.scale.setScalar(this.scale_); 
     }
 
