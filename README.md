@@ -4,9 +4,9 @@
 
 Highway 50 cuts through the heart of Nevada like a scar. It is desolate, sunbaked, and eerily silent. Once a vibrant route for pioneers and dreams, it’s now a forgotten stretch swallowed by sand and stories of those who never made it out.
 
-You are a lone explorer on a top-secret mission gone wrong. What was meant to be a quick recon trip across the arid wastelands of the desert has turned into a fight for survival. Your Range Rover is low on fuel, and the only road out stretches endlessly through dunes, ruins, and danger.
+You are a lone explorer on a top-secret mission gone wrong. What was meant to be a quick recon trip across the arid wastelands of the desert has turned into a fight for survival. Your vehicle is low on fuel, and the only road out stretches endlessly through dunes, ruins, and danger.
 
-Now, stranded on a stretch of road that never seems to end, you’re in a race for survival. Tumbleweed litters your path, turning every second into a life-or-death decision.
+Now, stranded on a stretch of road that never seems to end, you’re in a race for survival. Tumbleweeds and battiers litter your path, turning every second into a life-or-death decision.
 
 Your mission? **Escape.**  
 Your ally? **Your reflexes.**  
@@ -20,14 +20,14 @@ How far can you go before the desert claims you?
 
 ## 🎮 How to Play
 Start the Game:  
-*Press space to begin.*
+*Press enter to begin the game*
 
 Avoid Obstacles:  
 *Use AD or the arrow keys to dodge obstacles*  
 *Use W, space bar, or the up arrow to jump over obstacles*  
 
 Restart After a Crash:  
-*Click the screen to restart and try again.*
+*Press enter to restart the game*
 
 ## ✅ Objectives
 There’s no finish line – this is an endless runner.  
