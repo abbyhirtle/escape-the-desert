@@ -18,7 +18,7 @@ class gameManager {
     this.highscore = 0;
     this.Initialize_();
     this.maxAnisotrophy = null;
-    this._gameStarted = false;
+    this.gameStarted_ = false;
     window.addEventListener('keydown', (e) => this.OnKeyDown_(e));
   }
 
@@ -93,10 +93,10 @@ class gameManager {
   // checks for enter press to begin/restart game
   OnKeyDown_(e) {
     if((e.code == 'Enter')){
-      if(!this._gameStarted) {
+      if(!this.gameStarted_) {
         this.OnStart_();
       }
-      else if (this._gameStarted && this.gameOver_) {
+      else if (this.gameStarted_ && this.gameOver_) {
         this.OnRestart_();
       }
     }
@@ -104,7 +104,7 @@ class gameManager {
 
   // resets the game on restart
   OnRestart_() {
-    playGameMusic();
+    playGameMusic_();
     document.getElementById('game-over').classList.remove('active');
     this.gameOver_ = false;
     this.ResetScene_(); 
@@ -112,9 +112,9 @@ class gameManager {
 
   // starts the game on space
   OnStart_() {
-    playGameMusic();
+    playGameMusic_();
     document.getElementById('game-menu').style.display = 'none';
-    this._gameStarted = true;
+    this.gameStarted_ = true;
   }
 
   // resizes contents with the window
@@ -176,7 +176,7 @@ class gameManager {
 
   // updates player, environment, and obstacles while game runs
   Step_(timeElapsed) {
-    if (this.gameOver_ || !this._gameStarted) {
+    if (this.gameOver_ || !this.gameStarted_) {
       return;
     }
 
@@ -186,7 +186,7 @@ class gameManager {
 
     if (this.player_.gameOver && !this.gameOver_) {
       this.gameOver_ = true;
-      playGameOverMusic();
+      playGameOverMusic_();
       document.getElementById('game-over').classList.toggle('active');
     }
   }
@@ -198,22 +198,22 @@ const gameMusic = document.getElementById('game-music');
 const endMusic = document.getElementById('end-music');
 
 // helper functions for playing audio files
-function playStartMusic() {
-  stopAllMusic();
+function playStartMusic_() {
+  stopAllMusic_();
   startMusic.play();
 }
 
-function playGameMusic() {
-  stopAllMusic();
+function playGameMusic_() {
+  stopAllMusic_();
   gameMusic.play();
 }
 
-function playGameOverMusic() {
-  stopAllMusic();
+function playGameOverMusic_() {
+  stopAllMusic_();
   endMusic.play();
 }
 
-function stopAllMusic() {
+function stopAllMusic_() {
   [startMusic, gameMusic, endMusic].forEach(audio => {
     audio.pause();
     audio.currentTime = 0;
@@ -227,7 +227,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   // play start music once user clicks on window
   const startButton = document.getElementById('game-menu');
-  startButton.addEventListener('click', () => { playStartMusic(); }, { once: true }); 
+  startButton.addEventListener('click', () => { playStartMusic_(); }, { once: true }); 
 });
 
 // toggles music audio on and off

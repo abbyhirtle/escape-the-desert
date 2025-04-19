@@ -32,7 +32,7 @@ export const environment = (() => {
         ['vegitation.png', 15, 3, 20],
       ];
       // randomly selected from weighted list
-      const [textureName, scale, offsety] = this.weightedRandomSelector(assets);
+      const [textureName, scale, offsety] = this.weightedRandomSelector_(assets);
       
       // load texture of the given object and apply to a sprite
       const texLoader = new THREE.TextureLoader();
@@ -95,7 +95,7 @@ export const environment = (() => {
     }
 
     // randomly selects from a list of weighted assets
-    weightedRandomSelector(assets) {
+    weightedRandomSelector_(assets) {
       const totalWeight = assets.reduce((sum, [, , , weight]) => sum + weight, 0);
       let r = Math.random() * totalWeight;
     
@@ -117,10 +117,10 @@ export const environment = (() => {
       this.position_ = new THREE.Vector3(...position);
       this.textureName_ = textureName;
       this.sprite_ = null;
-      this.LoadTexture_();
+      this.LoadModel_();
     }
 
-    LoadTexture_() {
+    LoadModel_() {
       // load road sign and apply material to sprite
       const loader = new THREE.TextureLoader();
       loader.setPath('./textures/');

@@ -14,10 +14,8 @@ export const player = (() => {
     constructor(params) {
       this.position_ = new THREE.Vector3(0, 2, 0);
       this.playerBox_ = new THREE.Box3();
-      this.swerveStepDone_ = false;
       this.swerveState_ = 'idle';
-      this.swerveTimer_ = 0; 
-      this.swerveDuration_ = 1; 
+      this.gameOver = false;
       this.params_ = params;
       this.velocity_ = 0.0;
       this.targetZ_ = 0.0;
@@ -153,20 +151,6 @@ export const player = (() => {
         this.mesh_.position.copy(this.position_);
         this.CheckCollisions_();
       }
-    }
-
-    // updates player texture so vehicle appears to be perceived from a new angle
-    LoadSwerveTexture(textureName, x, y) {
-      const loader = new THREE.TextureLoader();
-      loader.setPath('./textures/');
-      loader.load(textureName, (texture) => {
-        texture.wrapS = THREE.RepeatWrapping;
-        texture.wrapT = THREE.RepeatWrapping;
-        texture.premultiplyAlpha = true;
-        const material = new THREE.SpriteMaterial({ map: texture, transparent: true});
-        material.color.set(0x302f2f);
-        this.mesh_.material = material; 
-      });
     }
   };
 
